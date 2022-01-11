@@ -1,50 +1,8 @@
-<script>
-export default {
-  name: 'app',
-  components: {
-  },
-  data() {
-    return {
-      tabs: [
-        { icon: 'fas fa-home', title: 'ホーム', id: 'home' },
-        { icon: 'fas fa-hashtag', title: '話題を検索', id: 'explore' },
-        { icon: 'far fa-bell', title: '通知', id: 'notifications' },
-        { icon: 'far fa-envelope', title: 'メッセージ', id: 'messages' },
-        { icon: 'far fa-bookmark', title: 'ブックマーク', id: 'bookmarks' },
-        { icon: 'fas fa-clipboard-list', title: 'リスト', id: 'lists' },
-        { icon: 'far fa-user', title: 'プロフィール', id: 'profile' },
-        { icon: 'fas fa-ellipsis-h', title: 'もっと見る', id: 'more' },
-      ],
-      id: 'home',
-      dropdown: false,
-      trending: [
-        { top: 'Trending in TX', title: 'Gigi', bottom: 'Trending with: Rip Gigi' },
-        { top: 'Music', title: 'We Won', bottom: '135K Tweets' },
-        { top: 'Pop', title: 'Blue Ivy', bottom: '40k tweets' },
-        { top: 'Trending in US', title: 'Denim Day', bottom: '40k tweets' },
-        { top: 'Trending', title: 'When Beyonce', bottom: '25.4k tweets' },
-      ],
-      friends: [
-        { src: 'man.jpg', name: 'male', handle: '@male' },
-        { src: 'woman.jpg', name: 'woman', handle: '@woman' },
-        { src: 'bmw.jpg', name: 'bmwJapan', handle: '@bmw.jp' }
-      ],
-      following: [
-        { src: 'man.jpg', name: 'male', handle: '@male', time: '20 min', tweet: 'Should I just quarantine on mars??', comments: '1,000', retweets: '550', like: '1,000,003' },
-        { src: 'woman.jpg', name: 'woman', handle: '@woman', time: '55 min', tweet: 'Should me and the rock do another sub-par movie together????', comments: '2,030', retweets: '50', like: '20,003' },
-        { src: 'man.jpg', name: 'male', handle: '@male', time: '1.4 hr', tweet: 'Haha just made a flame thrower. Shld I sell them?', comments: '100,000', retweets: '1,000,002', like: '5,000,003' },
-        { src: 'man.jpg', name: 'male', handle: '@male', time: '1.4 hr', tweet: 'Just did something crazyyyyyyy', comments: '100,500', retweets: '1,000,032', like: '5,000,103' }
-      ],
-    }
-  }
-}
-</script>
-
 
 <template>
   <div id="app" class="flex container h-screen w-full">
-    <!-- サイドナビ　セクション -->
-    <div class="lg:w-1/5 border-r border-lighter lpx-2 lg:px-6 py-2 flex flex-col justify-between">
+    <!-- サイドナビ セクション -->
+    <div class="lg:w-1/5 border-r border-lighter px-2 lg:px-6 py-2 flex flex-col justify-between">
       <div>
         <button class="h-12 w-12 hover:bg-lightblue text-3xl rounded-full text-blue">
           <i class="fab fa-twitter"></i>
@@ -53,10 +11,10 @@ export default {
           <button
             v-for="tab in tabs"
             @click="id = tab.id"
-            :class="`focus:outline-none hover:text-blue flex items-center py-2 px-4 hover:bg-lightblue rounded-full mr-auto mb-3 ${id === tab.id ? 'text-blue' : ''}`"
+            :class="`focus:outline-none hover:text-black flex items-center py-2 px-4 hover:bg-lightblue rounded-full mr-auto mb-3 ${id === tab.id ? 'text-black' : ''}`"
           >
             <i :class="`${tab.icon} text-2xl mr-4 text-left`"></i>
-            <p class="text-lg font-semibold text-left hidden lg:block">{{ tab.title }}</p>
+            <p class="text-lg font-normal text-left hidden lg:block">{{ tab.title }}</p>
           </button>
         </div>
         <button
@@ -104,11 +62,11 @@ export default {
           <button
             @click="dropdown = false"
             class="w-full text-left hover:bg-lightest border-r border-lighter p-3 test-sm"
-          >Add an existing account</button>
+          >既存のアカウントを追加</button>
           <button
             @click="dropdown = false"
             class="w-full text-left hover:bg-lightest border-r border-lighter p-3 test-sm"
-          >Log out @I like coffee</button>
+          >@I like coffee からログアウト</button>
         </div>
       </div>
     </div>
@@ -119,7 +77,7 @@ export default {
         <h1 class="text-xl font-bold">ホーム</h1>
         <i class="far fa-star text-xl text-black"></i>
       </div>
-      <div class="px-5 py-3 border-b-8 border-lighter flex">
+      <div class="px-5 py-3 border-b-2 border-lighter flex">
         <div class="flex-none">
           <img
             src="https://images.unsplash.com/photo-1561047029-196d190f0713?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
@@ -127,9 +85,10 @@ export default {
             alt
           />
         </div>
-        <form class="w-full px-4 relative border-transparent">
+        <form v-on:submit.prevent="addNewTweet" class="w-full px-4 relative border-transparent">
           <textarea
-            placeholder="今どうしてる？"
+            v-model="tweet.content"
+            placeholder="いまどうしてる？"
             class="mt-3 pb-3 w-full focus:outline-none border-transparent hover:border-white"
           />
           <div class="flex items-center">
@@ -140,7 +99,7 @@ export default {
           </div>
           <button
             type="submit"
-            class="h-10 px-4 text-white font-semibold bg-blue hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0"
+            class="h-10 px-4 text-white font-semibold bg-sky-300 hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0"
           >ツイートする</button>
         </form>
       </div>
@@ -153,7 +112,7 @@ export default {
             <p class="font-semibold">{{ follow.name }}</p>
             <p class="text-sm text-dark ml-2">{{ follow.handle }}</p>
             <p class="text-sm text-dark ml-2">{{ follow.time }}</p>
-            <i class="fas fa-angle-down text-lg text-dark ml-auto"></i>
+            <i class="fas fa-ellipsis-h text-lg text-dark ml-auto"></i>
           </div>
           <p class="py-2">{{ follow.tweet }}</p>
           <div class="flex items-center justify-between w-full">
@@ -166,13 +125,12 @@ export default {
               <i class="fas fa-retweet mr-3"></i>
               <p>{{ follow.retweets }}</p>
             </div>
-            <!-- <div class="flex items-center justify-between w-full"> -->
+
             <div class="flex items-center text-sm text-dark">
               <i class="far fa-heart mr-3"></i>
               <p>{{ follow.like }}</p>
             </div>
-            <!-- </div> -->
-            <!-- <div class="flex items-center justify-between w-full"> -->
+
             <div class="flex items-center text-sm text-dark">
               <i class="fas fa-share-square"></i>
             </div>
@@ -201,7 +159,7 @@ export default {
             <p class="font-bold text-left leading-tight">{{ trend.title }}</p>
             <p class="text-left leading-tight text-dark">{{ trend.bottom }}</p>
           </div>
-          <i class="fas fa-angle-down text-lg text-dark"></i>
+          <i class="fas fa-ellipsis-h text-lg text-dark"></i>
         </button>
         <button
           class="p-3 w-full hover:bg-lighter text-left text-blue border-r border-lighter"
@@ -235,5 +193,57 @@ export default {
 
 
 
-
+<script>
+export default {
+  name: 'app',
+  components: {
+  },
+  data() {
+    return {
+      tabs: [
+        { icon: 'fas fa-home', title: 'ホーム', id: 'home' },
+        { icon: 'fas fa-hashtag', title: '話題を検索', id: 'explore' },
+        { icon: 'far fa-bell', title: '通知', id: 'notifications' },
+        { icon: 'far fa-envelope', title: 'メッセージ', id: 'messages' },
+        { icon: 'far fa-bookmark', title: 'ブックマーク', id: 'bookmarks' },
+        { icon: 'fas fa-clipboard-list', title: 'リスト', id: 'lists' },
+        { icon: 'far fa-user', title: 'プロフィール', id: 'profile' },
+        { icon: 'fas fa-ellipsis-h', title: 'もっと見る', id: 'more' },
+      ],
+      id: 'home',
+      dropdown: false,
+      trending: [
+        { top: '世界のトピック', title: '中国台湾に侵攻する？', bottom: 'World war third' },
+        { top: 'スポーツ', title: '大谷選手', bottom: '135Kツイート' },
+        { top: '音楽', title: 'Blue Ivy', bottom: '40k ツイート' },
+        { top: '日本のトレンド', title: 'コロナで＼(^o^)／ｵﾜﾀ', bottom: '40k ツイート' },
+        { top: '経済', title: '国のシャッキンガ―Z', bottom: '25.4k ツイート' },
+      ],
+      friends: [
+        { src: 'man.jpg', name: 'male', handle: '@male' },
+        { src: 'woman.jpg', name: 'woman', handle: '@woman' },
+        { src: 'bmw.jpg', name: 'bmwJapan', handle: '@bmw.jp' }
+      ],
+      following: [
+        { src: 'man.jpg', name: 'male', handle: '@male', time: '20 min', tweet: 'UE4 パッケージ化設定のポイントを押さえる感じの初心者向けの解説記事と動画を作ってみました', comments: '20', retweets: '55', like: '60' },
+        { src: 'woman.jpg', name: 'woman', handle: '@woman', time: '55 min', tweet: 'UE4.25以上をお使いの方は、もうマテリアルでStatic Switchを自由に使えるかもしれません。', comments: '50', retweets: '50', like: '93' },
+        { src: 'man.jpg', name: 'male', handle: '@male', time: '1.4 hr', tweet: 'エピックゲームズのVirtual Production Partnersとして、ソニーPCLの社名が日本企業初で掲載されました。', comments: '156', retweets: '200', like: '103' },
+        { src: 'man.jpg', name: 'male', handle: '@male', time: '1.4 hr', tweet: '眠い', comments: '10', retweets: '10', like: '50' }
+      ],
+      tweets: [
+        { content: 'It is so nice outside!' }
+      ],
+      tweet: { content: '' }
+    }
+  },
+  methods: {
+    addNewTweet() {
+      let newTweet = {
+        content: this.tweet.content
+      };
+      this.tweets.push(newTweet)
+    }
+  }
+}
+</script>
 
